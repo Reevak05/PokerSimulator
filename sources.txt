@@ -1,0 +1,4 @@
+Sources:
+
+https://kotlinlang.org/docs/collections-overview.html
+Used to find information about Kotlin collections.
