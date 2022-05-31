@@ -1,4 +1,8 @@
 Sources:
 
+
 https://kotlinlang.org/docs/collections-overview.html
 Used to find information about Kotlin collections.
+
+https://kotlinlang.org/docs/enum-classes.html#working-with-enum-constants
+Used to find information about Kotlin enums.
