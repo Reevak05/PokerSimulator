@@ -1,8 +1,13 @@
 Sources:
 
-
 https://kotlinlang.org/docs/collections-overview.html
 Used to find information about Kotlin collections.
 
 https://kotlinlang.org/docs/enum-classes.html#working-with-enum-constants
 Used to find information about Kotlin enums.
+
+https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map.html#kotlin.collections$map(kotlin.collections.Map((kotlin.collections.map.K,%20kotlin.collections.map.V)),%20kotlin.Function1((kotlin.collections.Map.Entry((kotlin.collections.map.K,%20kotlin.collections.map.V)),%20kotlin.collections.map.R)))/transform
+Used to learn about the map function.
+
+https://www.mypokerbasics.com/winning-poker-hand/77/
+Used to find information about how to compare poker hands.
