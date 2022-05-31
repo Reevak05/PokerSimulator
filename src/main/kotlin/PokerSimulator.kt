@@ -1,5 +1,3 @@
-import java.sql.SQLOutput
-
 class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0) {
     val playerCount: Int = playerNames.size
     val players = mutableListOf<Player>()
@@ -13,40 +11,47 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
     val smallBlind = 2
     var currentBet = 0
 
-    fun playGame() {
-
+    init {
         // Add players
         for (name in playerNames) players.add(Player(startingAmount, name))
 
         // Initialize deck
         initializeDeck()
+    }
+
+    fun playGame() {
+
+        // Shuffle deck
+        deck.shuffle()
 
         // Deal two cards to each player
         dealCards()
 
-        cheatersView()
+        cheatersView() // for demonstration purposes; remove for actual game
 
         // Add blinds to pot
         players[smallBlindIndex].addMoneyToPot(smallBlind)
         players[bigBlindIndex].addMoneyToPot(bigBlind)
 
+        // Set current bet to big blind
         currentBet = bigBlind
 
+        // Perform a round of betting based on the cards in players' hands
         bettingRound()
 
-        revealCards()
+        // Reveal table cards (3 at once, then 1, then 1), performing betting rounds after each reveal
+        for (i in 0 until 3) {
+            revealCards()
+            bettingRound()
+        }
 
-        bettingRound()
+        cheatersView() // for demonstration purposes; remove for actual game
 
-        revealCards()
+        // End game: determine winner and allocate winnings
+        findWinner().distributeWinnings()
 
-        bettingRound()
-
-        revealCards()
-
-        bettingRound()
-
-
+        // Reset game for next round
+        resetRound()
     }
 
 
@@ -56,7 +61,6 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
                 deck.add(Card(value, suit))
             }
         }
-        deck.shuffle()
     }
 
     fun dealCards() {
@@ -66,6 +70,7 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
     }
 
     fun cheatersView() {
+        println("___C_H_E_A_T_E_R_'_S___V_I_E_W___")
         println("table cards: ")
         println(tableCards)
         println("pot: $pot")
@@ -74,6 +79,7 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
             println("hand: ${player.hand.joinToString(", ") { "${it.value} of ${it.suit}" }}")
             println("balance: ${player.balance}")
         }
+        println("_________________________________")
     }
 
     fun revealCards() {
@@ -87,7 +93,7 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
             tableCards.add(deck.removeFirst())
         }
         println("\nANNOUNCER: I will now reveal some cards on the table.")
-        println("ANNOUNCER: The table cards are: ${tableCards.joinToString(", ") { "${it.value} of ${it.suit}" }}")
+        println("ANNOUNCER: The table cards are: ${tableCards.joinToString(", ")}")
     }
 
     fun Player.addMoneyToPot(amount: Int) {
@@ -104,7 +110,8 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
             if (!players[i % playerCount].folded) {
                 val playResult = players[i % playerCount].play(currentBet)
                 println("ANNOUNCER: ${players[i % playerCount].name} has chosen to ${playResult.first.name}, adding ${playResult.second} to the pot.")
-                if (playResult.first == Actions.RAISE || playResult.first == Actions.BET) currentBet = players[i % playerCount].currentBet
+                if (playResult.first == Actions.RAISE || playResult.first == Actions.BET) currentBet =
+                    players[i % playerCount].currentBet
                 pot += playResult.second
             }
             i++
@@ -119,37 +126,39 @@ class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0)
         return true
     }
 
-    fun distributeWinnings() {
-
+    fun Player.distributeWinnings() {
+        println("${this.name} wins $pot from the pot.")
+        this.balance += pot
+        pot = 0
     }
 
-    fun calculateHandValue(playerHand: MutableList<Card>, tableCards: MutableList<Card>): Double {
-        val cards: List<Card> = playerHand + tableCards
-        return 0.0
-    }
-
-
-    // hand identification
-    fun containsPair(cards: List<Card>): Boolean {
-        for (i in cards.indices) {
-            for (j in i + 1 until cards.size) {
-                if (cards[i].value == cards[j].value) return true
-            }
+    fun findWinner(): Player {
+        var winner = players[0]
+        for (player in players) {
+            if (!player.folded && CardCollection(player.hand + tableCards) > CardCollection(winner.hand + tableCards)) winner =
+                player
         }
-        return false
+        println("ANNOUNCER: ${winner.name} wins!")
+        println("Table cards: ${tableCards.joinToString(", ")}")
+        println("${winner.name}'s cards: ${winner.hand.joinToString(", ")}")
+        return winner
     }
 
-    fun containsTwoPair(cards: List<Card>): Boolean {
-        var pairs = 0
-        for (i in cards.indices) {
-            for (j in i + 1 until cards.size) {
-                if (cards[i].value == cards[j].value) {
-                    pairs++
-                    if (pairs == 2) return true
-                }
-            }
+    fun resetRound() {
+        for (player in players) {
+            player.currentBet = 0
+            player.folded = false
+            discardPile.addAll(player.hand)
+            player.hand.clear()
         }
-        return false
+        deck.addAll(discardPile)
+        discardPile.clear()
+        deck.addAll(tableCards)
+        tableCards.clear()
+        pot = 0
+        currentBet = 0
+        bigBlindIndex = (bigBlindIndex + 1) % playerCount
+        smallBlindIndex = (smallBlindIndex + 1) % playerCount
     }
 
 }

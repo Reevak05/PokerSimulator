@@ -15,7 +15,7 @@ class Player(var balance: Int, val name: String = "Example Player") {
         println("Current bet: $currentBet")
         println("Amount you have put in pot: ${this.currentBet}")
         println("   Increase over previous bet: $betIncrease")
-            val input = Scanner(System.`in`)
+        val input = Scanner(System.`in`)
         if (betIncrease == 0) println("Enter your action (check, bet, fold):")
         else println("Enter your action (call, raise, fold):")
         val result = when (input.next().lowercase()) {
