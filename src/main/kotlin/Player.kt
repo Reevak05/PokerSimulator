@@ -8,7 +8,7 @@ class Player(var balance: Int, val name: String = "Example Player") {
     // Prompts each player to play their turn
     // Returns their action and the amount they add to the pot
     fun play(currentBet: Int): Pair<Actions, Int> {
-        val betIncrease = currentBet - this.currentBet;
+        val betIncrease = currentBet - this.currentBet
         println("\n$name, play your turn:")
         println("Balance: $balance")
         println("Your cards: ${hand.joinToString(", ") { "${it.value} of ${it.suit}" }}")
@@ -69,7 +69,7 @@ class Player(var balance: Int, val name: String = "Example Player") {
         }
         this.currentBet += result.second
         this.balance -= result.second
-        return result;
+        return result
     }
 }
 

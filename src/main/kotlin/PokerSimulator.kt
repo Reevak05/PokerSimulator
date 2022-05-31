@@ -1,4 +1,4 @@
-class PokerSimulator(val playerNames: List<String>, val startingAmount: Int = 0) {
+class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
     val playerCount: Int = playerNames.size
     val players = mutableListOf<Player>()
     val deck = mutableListOf<Card>()

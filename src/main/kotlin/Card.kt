@@ -15,16 +15,15 @@ class Card(val value: Int, val suit: String) {
 class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
 
     /**
-     * @param cards cards from table and player hand in which to check for matching cards
      * @param ignoreCardValue optional card value to ignore when checking for matching cards; used when checking for a full house
      * @return Pair<Int, Int>: first item is number of matching cards; second item is value of the matching cards
      */
     fun maxNumberOfMatchingCards(ignoreCardValue: Int = -1): Pair<Int, Int> {
         //TODO: make this return the highest value if there are multiple matches of the same number of cards
         val sortedCards = cards.sortedBy { card -> card.value }
-        var maxMatchingCards = 1;
+        var maxMatchingCards = 1
         var maxMatchingCardValue = -1
-        var matchingCards = 1;
+        var matchingCards = 1
         for (card in 0 until sortedCards.size - 1) {
             if (sortedCards[card].value != ignoreCardValue && sortedCards[card].value == sortedCards[card + 1].value) matchingCards++
             else matchingCards = 1
@@ -37,14 +36,13 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     }
 
     /**
-     * @param cards  cards from table and player hand in which to check for a straight
      * @return Int value of highest card in straight or -1 if no straight
      */
     fun containsStraight(): Int {
         val sortedCards = cards.sortedBy { card -> card.value }
-        var orderedCards = 1;
+        var orderedCards = 1
         for (card in 0 until sortedCards.size - 1) {
-            if (sortedCards[card].value + 1 == sortedCards[card + 1].value || (sortedCards[card].value == 13 && sortedCards[card + 1].value == 1)) orderedCards++ // if the next card is one higher (with a special case for a king and an ace))
+            if (sortedCards[card].value + 1 == sortedCards[card + 1].value || (sortedCards[card].value == 13 && sortedCards[card + 1].value == 1)) orderedCards++ // if the next card is one higher (with a special case for a king and an ace)
             else orderedCards = 1
             if (orderedCards == 5) return sortedCards[card + 1].value
         }
@@ -52,7 +50,6 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     }
 
     /**
-     * @param cards cards from table and player hand in which to check for a flush
      * @return Int value of highest card in flush or -1 if no flush
      */
     fun containsFlush(): Int {
@@ -63,7 +60,6 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     }
 
     /**
-     * @param cards cards from table and player hand in which to check for a full house
      * @return Pair<Int, Int>: first item is value of three of a kind; second item is value of pair
      * returns -1, -1 if no full house
      */
@@ -77,7 +73,6 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     }
 
     /**
-     * @param cards cards from table and player hand in which to check for a straight flush
      * @return Int value of highest card in straight flush or -1 if no straight flush
      */
     fun containsStraightFlush(): Int {
