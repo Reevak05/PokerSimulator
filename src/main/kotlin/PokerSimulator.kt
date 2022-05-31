@@ -1,17 +1,17 @@
 import java.util.*
 
 class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
-    val playerCount: Int = playerNames.size
-    val players = mutableListOf<Player>()
-    val deck = mutableListOf<Card>()
-    val discardPile = mutableListOf<Card>()
-    val tableCards = mutableListOf<Card>()
-    var pot = 0
-    var bigBlindIndex = 1
-    var smallBlindIndex = 0
-    val bigBlind = 5
-    val smallBlind = 2
-    var currentBet = 0
+    private val playerCount: Int = playerNames.size
+    private val players = mutableListOf<Player>()
+    private val deck = mutableListOf<Card>()
+    private val discardPile = mutableListOf<Card>()
+    private val tableCards = mutableListOf<Card>()
+    private var pot = 0
+    private var bigBlindIndex = 1
+    private var smallBlindIndex = 0
+    private val bigBlind = 5
+    private val smallBlind = 2
+    private var currentBet = 0
 
     init {
         // Add players
@@ -63,7 +63,7 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
     }
 
 
-    fun initializeDeck() {
+    private fun initializeDeck() {
         for (suit in listOf("spades", "hearts", "diamonds", "clubs")) {
             for (value in 1..13) {
                 deck.add(Card(value, suit))
@@ -71,13 +71,14 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
         }
     }
 
-    fun dealCards() {
+    private fun dealCards() {
         for (i in bigBlindIndex until 2 * playerCount + bigBlindIndex) {
             players[i % playerCount].hand.add(deck.removeFirst())
         }
     }
 
-    fun cheatersView() {
+    private fun
+            cheatersView() {
         println("___C_H_E_A_T_E_R_'_S___V_I_E_W___")
         println("table cards: ")
         println(tableCards)
@@ -90,7 +91,7 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
         println("_________________________________")
     }
 
-    fun revealCards() {
+    private fun revealCards() {
         discardPile.add(deck.removeFirst())
         for (i in 0 until when (tableCards.size) {
             0 -> 3
@@ -104,14 +105,14 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
         println("ANNOUNCER: The table cards are: ${tableCards.joinToString(", ")}")
     }
 
-    fun Player.addMoneyToPot(amount: Int) {
+    private fun Player.addMoneyToPot(amount: Int) {
         this.balance -= amount
         this.currentBet += amount
         pot += amount
     }
 
     // Present players with the opportunity to bet: go around the table at least once, then continue as long as the bets are not settled
-    fun bettingRound() {
+    private fun bettingRound() {
         var i = bigBlindIndex + 1
         val oneRoundIndex = bigBlindIndex + playerCount
         while (!betsSettled() || i <= oneRoundIndex) {
@@ -127,20 +128,20 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
 
     }
 
-    fun betsSettled(): Boolean {
+    private fun betsSettled(): Boolean {
         for (player in players) {
             if (!player.folded && player.currentBet < currentBet) return false
         }
         return true
     }
 
-    fun Player.distributeWinnings() {
+    private fun Player.distributeWinnings() {
         println("${this.name} wins $pot from the pot.")
         this.balance += pot
         pot = 0
     }
 
-    fun findWinner(): Player {
+    private fun findWinner(): Player {
         var winner = players[0]
         for (player in players) {
             if (!player.folded && CardCollection(player.hand + tableCards) > CardCollection(winner.hand + tableCards)) winner =
@@ -152,7 +153,7 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
         return winner
     }
 
-    fun resetRound() {
+    private fun resetRound() {
         for (player in players) {
             player.currentBet = 0
             player.folded = false

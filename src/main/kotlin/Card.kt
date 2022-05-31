@@ -12,13 +12,13 @@ class Card(val value: Int, val suit: String) {
     }
 }
 
-class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
+class CardCollection(private val cards: List<Card>) : Comparable<CardCollection> {
 
     /**
      * @param ignoreCardValue optional card value to ignore when checking for matching cards; used when checking for a full house
      * @return Pair<Int, Int>: first item is number of matching cards; second item is value of the matching cards
      */
-    fun maxNumberOfMatchingCards(ignoreCardValue: Int = -1): Pair<Int, Int> {
+    private fun maxNumberOfMatchingCards(ignoreCardValue: Int = -1): Pair<Int, Int> {
         //TODO: make this return the highest value if there are multiple matches of the same number of cards
         val sortedCards = cards.sortedBy { card -> card.value }
         var maxMatchingCards = 1
@@ -38,7 +38,7 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     /**
      * @return Int value of highest card in straight or -1 if no straight
      */
-    fun containsStraight(): Int {
+    private fun containsStraight(): Int {
         val sortedCards = cards.sortedBy { card -> card.value }
         var orderedCards = 1
         for (card in 0 until sortedCards.size - 1) {
@@ -52,7 +52,7 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     /**
      * @return Int value of highest card in flush or -1 if no flush
      */
-    fun containsFlush(): Int {
+    private fun containsFlush(): Int {
         val groupedCards = cards.groupBy { card -> card.suit }
         for (group in groupedCards) if (group.value.size >= 5) return if (group.value.map { card -> card.value }
                 .contains(1)) 1 else group.value.maxOf { card -> card.value }
@@ -63,7 +63,7 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
      * @return Pair<Int, Int>: first item is value of three of a kind; second item is value of pair
      * returns -1, -1 if no full house
      */
-    fun containsFullHouse(): Pair<Int, Int> {
+    private fun containsFullHouse(): Pair<Int, Int> {
         val matchingCardsResults1 = maxNumberOfMatchingCards()
         val matchingCardsResults2 = maxNumberOfMatchingCards(matchingCardsResults1.second)
         return if (matchingCardsResults1.first >= 3 && matchingCardsResults2.first >= 2) Pair(
@@ -75,7 +75,7 @@ class CardCollection(val cards: List<Card>) : Comparable<CardCollection> {
     /**
      * @return Int value of highest card in straight flush or -1 if no straight flush
      */
-    fun containsStraightFlush(): Int {
+    private fun containsStraightFlush(): Int {
         val flushMaxValue = containsFlush()
         val straightMaxValue = containsStraight()
         return if (flushMaxValue != -1 && flushMaxValue == straightMaxValue) flushMaxValue
