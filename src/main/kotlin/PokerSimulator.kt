@@ -1,3 +1,5 @@
+import java.util.*
+
 class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
     val playerCount: Int = playerNames.size
     val players = mutableListOf<Player>()
@@ -52,6 +54,12 @@ class PokerSimulator(playerNames: List<String>, startingAmount: Int = 0) {
 
         // Reset game for next round
         resetRound()
+
+        // Ask player to play again
+        val input = Scanner(System.`in`)
+        println("Would you like to continue playing?")
+        if (input.nextLine().lowercase() == "yes") playGame()
+        else println("Thank you for playing! Goodbye.")
     }
 
 
